@@ -1,14 +1,12 @@
 services:
 
   web:
-    image: nginx:latest
+    build:
+      context: .
+      dockerfile: Dockerfile-web
     ports:
       - "8080:80"
-    volumes:
-      - ./ui-compiled:/usr/share/nginx/html
-      - ./nginx.conf:/etc/nginx/default.conf
   api:
-    image: python:3.11
     build:
       context: .
       dockerfile: Dockerfile-api
