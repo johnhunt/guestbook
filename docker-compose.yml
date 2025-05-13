@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
 
   web:
@@ -9,3 +7,13 @@ services:
     volumes:
       - ./ui-compiled:/usr/share/nginx/html
       - ./nginx.conf:/etc/nginx/default.conf
+  api:
+    image: python:3.11
+    build:
+      context: .
+      dockerfile: Dockerfile-api
+    ports:
+      - "8000:80"
+    volumes:
+      - ./src-api:/app
+  
