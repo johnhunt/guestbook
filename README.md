@@ -1,70 +1,38 @@
-# Guestbook app
+# Guestbook docker-compose devops test project
 
-Please don't use this code in production - its original purpose was to showcase my (John Hunt) devops abilities for a job application. If you use it in production then all kinds of bad things might happen so please don't.
+## ⚠️ Warning! 
 
-## Prerequisits
+This project should definitely NOT be run in a production environment, it is purely to showcase my (John Hunt's) technical abilities in regards to a job application. I have not spent *any* time securing this code.
 
-- npm
-- docker-compose
+## About
 
-## Local deployment with docker-compose
+This is a very simple three-tiered guestbook app. Basically you have a single page where you can sign the guestbook and see previous messages.
 
-Use this to spin up the web server, API and database quickly to test it builds properly and to try out the application locally with minimal fuss. Use a unique password in place of `topsecret2025foobbq`, this will be your local database password.
+There are two docker-compose files - `docker-compose` is for local **deployment**, `docker-compose-develop` is for local **development**. The difference is that the develop compose file mounts the src-ui and src-api directories in this project and hot-loads from them making development a breeze (no more nvm, npm etc)!
+
+Cloud deployment is outside the scope of this project, however I have provided some terraform code to show the resources that could be created if you were to run this in the cloud.
+
+**In order to work with this project, you will need docker-compose. Find out more here: https://docs.docker.com/compose/**
+
+## Local deployment
+
+You can deploy to your local machine, or simply clone the project to any server or virtual machine you'd like to host from and run:
 
     DB_PASSWORD=topsecret2025foobbq docker-compose up -d --build
 
-Be sure to `docker compose down` when before development as it uses the same ports.
+Replace the database password with a secure one of your choosing. Running this command creates 3 container images that are then executed:
 
-### Run the UI in development mode
+  1. A web container running NginX which serves the compiled React app from the `src-ui` directory.
+  2. A FastAPI Python app built from the source code within `src-api`
+  3. A postgres database server to provide persistent storage.
 
-You might want to work on the UI, in which case just run
+You can then view the app at http://localhost:8080
 
-    cd src-ui/
-    npm run dev
+## Local development
 
-This spins up a local dev server which hot-reloads the app making it easier to develop.
+Local development is possible by using the `docker-compose-develop` file.
 
-### Check your UI code for errors/formatting
+    docker-compose -f docker-compose-develop.yml up -d
 
-    npm run lint
+You can then view the app at http://localhost:9090 and edit any of the files in `src-ui` and `src-api` with the changes loaded automatically when you save your files.
 
-### Working on the API code
-
-For local development you'll want to ensure the local database is running first, you can do this by running:
-
-   DB_PASSWORD=topsecret2025foobbq docker-compos run -p 127.0.0.1:5432:5432 -d db #@todo - will localhost work here?
-
-This also exposes the database to the local machine for developing with.
-
-Ensure the virtual environment is activated
-    
-    cd src-api
-    source .venv/bin/activate
-
-Install required packages
-
-    pip install -r requirements.txt
-
-Start the dev API server (runs on port 8000)
-
-    DATABASE_URL=postgresql://postgres:topsecret2025foobbq@localhost:5432/mydatabase fastapi dev main.py
-
-### Database migrations
-
-If you create a new model in models.py then you'll need to create a new migration file to reflect this. These migrations are run when the API starts up (although you can apply them manually if you like):
-
-   DATABASE_URL=postgresql://postgres:topsecret2025foobbq@localhost:5432/mydatabase alembic revision --autogenerate -m "Create guestbook_entries table"
-
-# Deploying infrastructure to the cloud
-
-Infrastructure for this project is defined in the `infrastructure/` directory with Azure as the cloud provider in mind. IaC is written in terraform. To deploy you'll need these tools:
-
- - terraform
- - az cli
-
-Simply login to Azure (`az login`) then run terraform plan to check, followed by apply:
-    cd infrastructure
-    terraform plan
-    terraform apply
-
-This will deploy infrastructure for both dev and production but NOT any code - that is out of scope for this project.
