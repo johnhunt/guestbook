@@ -11,6 +11,11 @@ from models import GuestbookEntry
 
 import os, logging
 
+# Allow local UI to access the API
+from fastapi.middleware.cors import CORSMiddleware
+
+
+
 def run_migrations():
     alembic_ini_path = os.path.join(os.path.dirname(__file__), "alembic.ini")
     alembic_cfg = Config(alembic_ini_path)
@@ -29,6 +34,13 @@ class GuestbookEntrySchema(BaseModel):
     comment: str
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"], # Allow localhost, if this app were real I'd also allow the prod domain
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Run the alembic migrations on startup
 @app.on_event("startup")
@@ -77,7 +89,7 @@ def get_all_guestbook_entries():
     db.close()
     return {
         "entries": [
-            {"id": e.id, "name": e.name, "comment": e.comment}
+            {"id": e.id, "name": e.name, "comment": e.comment, "created_at": e.created_at.isoformat(timespec='milliseconds') + 'Z'}
             for e in entries
         ]
     }
