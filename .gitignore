@@ -4,3 +4,8 @@ __pycache__
 
 # Contains my subscription and tenant ID (I don't want those on github)
 hidden_vars.tf
+
+# Terraform ignores - normally I'd use tfcloud or somewhere else (secure) to store
+.terraform/
+*.tfstate
+*.tfstate.backup
