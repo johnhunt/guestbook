@@ -1,0 +1,51 @@
+services:
+
+  web-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile-web-develop
+    ports:
+      - "9090:5173"
+    volumes:
+      - ./src-ui:/app
+    networks:
+      - guestbook-network-dev
+
+  api-dev:
+    depends_on:
+      db-dev:
+        condition: service_healthy # Ensure that postgres is not only running but has finished initializing
+    build:
+      context: .
+      dockerfile: Dockerfile-api-develop
+    ports:
+      - "9000:80"
+    environment:
+      - DATABASE_URL=postgresql://postgres:localdevpasswordnotsecure@db-dev:5432/guestbook
+    volumes:
+      - ./src-api:/app
+    networks:
+      - guestbook-network-dev
+
+  db-dev: 
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: localdevpasswordnotsecure
+      POSTGRES_DB: guestbook
+    volumes:
+      - db_data_dev:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - guestbook-network-dev
+
+volumes:
+  db_data_dev:
+
+networks:
+  guestbook-network-dev:
+    driver: bridge
