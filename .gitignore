@@ -1,3 +1,6 @@
 mynotes.txt
 ui-compiled
 __pycache__
+
+# Contains my subscription and tenant ID (I don't want those on github)
+hidden_vars.tf
