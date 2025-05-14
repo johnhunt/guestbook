@@ -7,13 +7,13 @@ Please don't use this code in production - its original purpose was to showcase 
 - npm
 - docker-compose
 
-## Build UI for use with docker-compose
+## Local deployment with docker-compose
 
-Running the following commands will install dependancies for the UI and build it. The build directory is `ui-compiled` in the root of this project. This is mounted by docker-compose for NginX.
+Use this to spin up the web server, API and database quickly to test it builds properly and to try out the application locally with minimal fuss. Use a unique password in place of `topsecret2025foobbq`, this will be your local database password.
 
-    cd src-ui/
-    npm install
-    npm run build
+    DB_PASSWORD=topsecret2025foobbq docker-compose up -d
+
+Be sure to `docker compose down` when before development as it uses the same ports.
 
 ### Run the UI in development mode
 
@@ -27,3 +27,24 @@ This spins up a local dev server which hot-reloads the app making it easier to d
 ### Check your UI code for errors/formatting
 
     npm run lint
+
+### Develop the API
+
+For local development you'll want to ensure the local database is running first, you can do this by running:
+
+   DB_PASSWORD=topsecret2025foobbq docker compose -f 'docker-compose.yml' up --build 'db'
+
+Note, you'll need to prefix the docker compose command with 
+
+Ensure the virtual environment is activated
+
+    source .venv/bin/activate
+
+Install required packages
+
+    pip install -r requirements.txt
+
+Start the dev API server (runs on port 8000)
+
+    fastapi dev main.py
+
