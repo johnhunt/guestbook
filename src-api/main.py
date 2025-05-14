@@ -36,7 +36,7 @@ class GuestbookEntrySchema(BaseModel):
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:8080"], # Allow localhost, if this app were real I'd also allow the prod domain
+    allow_origins=["http://localhost:5173", "http://localhost:8080", "http://localhost:9090"], # Allow localhost, if this app were real I'd also allow the prod domain
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
