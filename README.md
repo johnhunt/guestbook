@@ -54,3 +54,17 @@ Start the dev API server (runs on port 8000)
 If you create a new model in models.py then you'll need to create a new migration file to reflect this. These migrations are run when the API starts up (although you can apply them manually if you like):
 
    DATABASE_URL=postgresql://postgres:topsecret2025foobbq@localhost:5432/mydatabase alembic revision --autogenerate -m "Create guestbook_entries table"
+
+# Deploying infrastructure to the cloud
+
+Infrastructure for this project is defined in the `infrastructure/` directory with Azure as the cloud provider in mind. IaC is written in terraform. To deploy you'll need these tools:
+
+ - terraform
+ - az cli
+
+Simply login to Azure (`az login`) then run terraform plan to check, followed by apply:
+    cd infrastructure
+    terraform plan
+    terraform apply
+
+This will deploy infrastructure for both dev and production but NOT any code - that is out of scope for this project.
