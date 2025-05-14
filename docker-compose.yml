@@ -1,0 +1,32 @@
+services:
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile-web
+    ports:
+      - "8080:80"
+      
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile-api
+    ports:
+      - "8000:80"
+    environment:
+      - DATABASE_URL=postgresql://postgres:${DB_PASSWORD}@db:5432/mydatabase
+    volumes:
+      - ./src-api:/app
+
+  db: 
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: mydatabase
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
+  
