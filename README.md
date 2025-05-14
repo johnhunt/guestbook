@@ -11,7 +11,7 @@ Please don't use this code in production - its original purpose was to showcase 
 
 Use this to spin up the web server, API and database quickly to test it builds properly and to try out the application locally with minimal fuss. Use a unique password in place of `topsecret2025foobbq`, this will be your local database password.
 
-    DB_PASSWORD=topsecret2025foobbq docker-compose up -d
+    DB_PASSWORD=topsecret2025foobbq docker-compose up -d --build
 
 Be sure to `docker compose down` when before development as it uses the same ports.
 
