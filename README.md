@@ -36,3 +36,5 @@ Local development is possible by using the `docker-compose-develop` file.
 
 You can then view the app at http://localhost:9090 and edit any of the files in `src-ui` and `src-api` with the changes loaded automatically when you save your files.
 
+**Note that for ease of development, the database credentials are hardcoded in the docker-compose-develop.yml file.**
+
